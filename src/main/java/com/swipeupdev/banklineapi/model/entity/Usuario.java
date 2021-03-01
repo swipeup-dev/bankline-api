@@ -25,8 +25,8 @@ public class Usuario implements Serializable {
     private static final long serialVersionUID = 7733776198250219608L;
     private static final byte NOME_LENGTH = 100;
     private static final byte CPF_LENGTH = 11;
-    private static final byte LOGIN_MIN_LENGTH = 3;
-    private static final byte LOGIN_MAX_LENGTH = 20;
+    protected static final byte LOGIN_MIN_LENGTH = 3;
+    protected static final byte LOGIN_MAX_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
