@@ -1,8 +1,8 @@
 package com.swipeupdev.banklineapi.model.enums;
 
 public enum TipoTransacao {
-    R("RECEITA", 1),
-    D("DESPESA", -1);
+    ENTRADA("ENTRADA", 1),
+    SAIDA("SAIDA", -1);
 
     private String transacao;
     private int fatorConversao;
