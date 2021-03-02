@@ -1,5 +1,7 @@
 package com.swipeupdev.banklineapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,12 +27,12 @@ public class Usuario implements Serializable {
     private static final long serialVersionUID = 7733776198250219608L;
     private static final byte NOME_LENGTH = 100;
     private static final byte CPF_LENGTH = 11;
-    protected static final byte LOGIN_MIN_LENGTH = 3;
-    protected static final byte LOGIN_MAX_LENGTH = 20;
+    private static final byte LOGIN_MIN_LENGTH = 3;
+    private static final byte LOGIN_MAX_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "nome", length = NOME_LENGTH, nullable = false)
     @NotNull
@@ -46,28 +48,29 @@ public class Usuario implements Serializable {
     @NotNull
     private String login;
 
+    @JsonIgnore
     @Lob
     @Column(name = "senha", nullable = false)
     @NotNull
     private String senha;
 
+    @JsonIgnore
     @Lob
     @Column(name = "senha_recuperacao")
-    @NotNull
     private String senhaRecuperacao;
 
-    @Column(name = "recuperar_senha")
-    @NotNull
+    @Column(name = "recuperar_senha", nullable = false)
     private Boolean recuperarSenha;
 
     public Usuario() {
+        this.recuperarSenha = false;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
