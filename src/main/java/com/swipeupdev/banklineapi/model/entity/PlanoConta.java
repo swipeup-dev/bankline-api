@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -40,11 +40,9 @@ public class PlanoConta implements Serializable {
     @Column(name = "padrao", nullable = false)
     private Boolean padrao;
 
-    //Depende de um usuario
-    @Column(name = "login_usuario", length = Usuario.LOGIN_MAX_LENGTH, nullable = false)
-    @Size(min = Usuario.LOGIN_MIN_LENGTH, max = Usuario.LOGIN_MAX_LENGTH)
-    @NotNull
-    private String login;
+    @ManyToOne(targetEntity = Usuario.class)
+    @JoinColumn(name = "login_usuario", referencedColumnName = "login", nullable = false)
+    private Usuario login;
 
     public PlanoConta() {
     }
@@ -81,11 +79,11 @@ public class PlanoConta implements Serializable {
         this.padrao = padrao;
     }
 
-    public String getLogin() {
+    public Usuario getLogin() {
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(Usuario login) {
         this.login = login;
     }
 
