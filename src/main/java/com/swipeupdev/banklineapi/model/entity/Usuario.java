@@ -17,11 +17,11 @@ import java.util.Objects;
 
 @Entity
 @Table(
-    name = "tb_usuario",
-    indexes = {
-        @Index(name = "idx_usuario_cpf", columnList = "cpf", unique = true),
-        @Index(name = "idx_usuario_login", columnList = "login", unique = true)
-    }
+        name = "tb_usuario",
+        indexes = {
+                @Index(name = "idx_usuario_cpf", columnList = "cpf", unique = true),
+                @Index(name = "idx_usuario_login", columnList = "login", unique = true)
+        }
 )
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 7733776198250219608L;
@@ -133,5 +133,15 @@ public class Usuario implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", login='" + login + '\'' +
+                '}';
     }
 }

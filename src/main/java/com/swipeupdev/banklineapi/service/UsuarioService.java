@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.security.SecureRandom;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -44,9 +43,9 @@ public class UsuarioService {
             throw new InvalidArgumentException(violation.getMessage());
         }
 
-        if (Objects.nonNull(usuarioRepository.localizarUsuarioPorCpf(dto.getCpf()))) {
+        if (usuarioRepository.existsByCpf(dto.getCpf())) {
             throw new ExistingRecordException("CPF já cadastrado.");
-        } else if (Objects.nonNull(usuarioRepository.localizarUsuarioPorLogin(dto.getLogin()))) {
+        } else if (usuarioRepository.existsByLogin(dto.getLogin())) {
             throw new ExistingRecordException("Login já cadastrado.");
         }
     }
