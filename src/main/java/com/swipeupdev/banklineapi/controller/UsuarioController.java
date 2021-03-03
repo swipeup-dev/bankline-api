@@ -1,6 +1,6 @@
 package com.swipeupdev.banklineapi.controller;
 
-import com.swipeupdev.banklineapi.model.dto.LoginDto;
+import com.swipeupdev.banklineapi.model.dto.AtualizadorSenhaDto;
 import com.swipeupdev.banklineapi.model.dto.NovaSenhaDto;
 import com.swipeupdev.banklineapi.model.dto.UsuarioDto;
 import com.swipeupdev.banklineapi.service.UsuarioService;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
-
     @Autowired
     private UsuarioService service;
 
@@ -32,8 +31,9 @@ public class UsuarioController {
     }
 
     @PostMapping(path = "/alterar-senha")
-    public ResponseEntity<?> alterarSenha(LoginDto dto) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    public void alterarSenha(@RequestBody AtualizadorSenhaDto dto) {
+        service.alterarSenha(dto);
     }
 
 }

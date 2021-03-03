@@ -1,12 +1,16 @@
 package com.swipeupdev.banklineapi.service;
 
+import com.swipeupdev.banklineapi.model.dto.AtualizadorSenhaDto;
 import com.swipeupdev.banklineapi.model.dto.NovaSenhaDto;
 import com.swipeupdev.banklineapi.model.dto.UsuarioDto;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
+import com.swipeupdev.banklineapi.model.exception.EntityRequirementException;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
+import com.swipeupdev.banklineapi.model.exception.RecordNotFoundException;
 import com.swipeupdev.banklineapi.repository.UsuarioRepository;
 import com.swipeupdev.banklineapi.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,12 +71,7 @@ public class UsuarioService {
     public NovaSenhaDto novaSenha(NovaSenhaDto dto) {
         validator.validate(dto);
 
-        Optional<Usuario> opt = usuarioRepository.findByLogin(dto.getLogin());
-        if (opt.isEmpty()) {
-            throw new ExistingRecordException("Login não cadastrado.");
-        }
-
-        Usuario usuario = opt.get();
+        Usuario usuario = getUsuarioExistente(dto.getLogin());
         usuario.setSenhaRecuperacao(crypt.encode(dto.getSenhaRecuperacao()));
         usuario.setRecuperarSenha(true);
         usuarioRepository.save(usuario);
@@ -81,5 +80,32 @@ public class UsuarioService {
         //  JsonIgnore (campo não é atualizado no recebimento)
         dto.setLogin(null);
         return dto;
+    }
+
+    public void alterarSenha(AtualizadorSenhaDto dto) {
+        validator.validate(dto);
+
+        Usuario usuario = getUsuarioExistente(dto.getLogin());
+        if (!usuario.getRecuperarSenha()) {
+            throw new EntityRequirementException("Solicitação de nova senha não foi realizada.");
+        }
+
+        if (!BCrypt.checkpw(dto.getSenhaRecuperacao(), usuario.getSenhaRecuperacao())) {
+            throw new EntityRequirementException("Senha de recuperação inválida.");
+        }
+
+        usuario.setSenha(crypt.encode(dto.getNovaSenha()));
+        usuario.setRecuperarSenha(false);
+        usuario.setSenhaRecuperacao(null);
+        usuarioRepository.save(usuario);
+    }
+
+    private Usuario getUsuarioExistente(String login) {
+        Optional<Usuario> opt = usuarioRepository.findByLogin(login);
+        if (opt.isEmpty()) {
+            throw new RecordNotFoundException("Login não cadastrado.");
+        }
+
+        return opt.get();
     }
 }
