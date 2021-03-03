@@ -7,6 +7,9 @@ import javax.validation.constraints.Size;
 
 public class UsuarioDto {
     public static final String LOGIN_NOT_BLANK = "O 'login' do usuário não pode ser em branco.";
+    public static final String SENHA_NOT_BLANK = "A 'senha' do usuário não pode ser em branco.";
+    public static final int SENHA_MIN_SIZE = 8;
+    public static final String SENHA_SIZE_MESSAGE = "A 'senha' do usuário deve ser maior igual a 8 caracteres.";
 
     @NotBlank(message = "O 'nome' do usuário não pode ser em branco.")
     @Size(min = 6, max = 100, message = "O 'nome' do usuário deverá ser entre 6 e 100 caracteres.")
@@ -25,8 +28,8 @@ public class UsuarioDto {
     @Size(min = 4, max = 20, message = "O 'login' de usuário deverá ser entre 4 e 20 caracteres.")
     private String login;
 
-    @NotBlank(message = "A 'senha' do usuário não pode ser em branco.")
-    @Size(min = 8, message = "A 'senha' do usuário deve ser maior igual a 8 caracteres.")
+    @NotBlank(message = SENHA_NOT_BLANK)
+    @Size(min = SENHA_MIN_SIZE, message = SENHA_SIZE_MESSAGE)
     private String senha;
 
     public String getNome() {

@@ -1,6 +1,7 @@
 package com.swipeupdev.banklineapi.controller;
 
 import com.swipeupdev.banklineapi.model.dto.LoginDto;
+import com.swipeupdev.banklineapi.model.dto.NovaSenhaDto;
 import com.swipeupdev.banklineapi.model.dto.UsuarioDto;
 import com.swipeupdev.banklineapi.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class UsuarioController {
     }
 
     @PostMapping(path = "/nova-senha")
-    public ResponseEntity<?> novaSenha() {
-        return null;
+    public ResponseEntity<NovaSenhaDto> novaSenha(@RequestBody NovaSenhaDto dto) {
+        return ResponseEntity.ok(service.novaSenha(dto));
     }
 
     @PostMapping(path = "/alterar-senha")
