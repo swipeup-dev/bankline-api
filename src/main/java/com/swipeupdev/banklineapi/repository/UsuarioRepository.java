@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    @Query(value = "SELECT u FROM Usuario u WHERE u.cpf = :cpf")
+    Usuario localizarUsuarioPorCpf(@Param(value = "cpf") String cpf);
 
     @Query(value = "SELECT u FROM Usuario u WHERE u.login = :login")
     Usuario localizarUsuarioPorLogin(@Param(value = "login") String login);
