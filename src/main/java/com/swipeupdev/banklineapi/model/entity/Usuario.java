@@ -19,8 +19,9 @@ import java.util.Objects;
 @Table(
         name = "tb_usuario",
         indexes = {
-                @Index(name = "idx_usuario_cpf", columnList = "cpf", unique = true),
-                @Index(name = "idx_usuario_login", columnList = "login", unique = true)
+                @Index(name = "unq_idx_usuario_cpf", columnList = "cpf", unique = true),
+                @Index(name = "unq_idx_usuario_login", columnList = "login", unique = true),
+                @Index(name = "unq_idx_usuario_email", columnList = "email", unique = true)
         }
 )
 public class Usuario implements Serializable {
@@ -42,6 +43,9 @@ public class Usuario implements Serializable {
     @Size(min = CPF_LENGTH, max = CPF_LENGTH)
     @NotNull
     private String cpf;
+
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @Column(name = "login", length = LOGIN_MAX_LENGTH, nullable = false)
     @Size(min = LOGIN_MIN_LENGTH, max = LOGIN_MAX_LENGTH)
@@ -88,6 +92,14 @@ public class Usuario implements Serializable {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getLogin() {
