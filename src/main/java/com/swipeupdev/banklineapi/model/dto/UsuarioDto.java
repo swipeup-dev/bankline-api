@@ -16,8 +16,7 @@ public class UsuarioDto {
     private String nome;
 
     @NotBlank(message = "O 'cpf' do usuário não pode ser em branco.")
-    @Size(min = 11, max = 11, message = "O 'cpf' deve conter apenas 11 números.")
-    @Pattern(regexp = "[\\d]{11}", message = "O 'cpf' deve conter apenas caracteres numéricos.")
+    @Pattern(regexp = "[\\d]{11}", message = "O 'cpf' deve conter apenas 11 caracteres numéricos.")
     private String cpf;
 
     @Email(message = "Campo 'email' inválido.")
