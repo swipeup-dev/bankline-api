@@ -28,7 +28,7 @@ public class Conta implements Serializable {
 
     @ManyToOne(targetEntity = Usuario.class)
     @JoinColumn(name = "login_usuario", referencedColumnName = "login", nullable = false)
-    private Usuario login;
+    private Usuario usuario;
 
     public Conta() {
         this.saldo = .0;
@@ -50,12 +50,12 @@ public class Conta implements Serializable {
         this.saldo = saldo;
     }
 
-    public Usuario getLogin() {
-        return login;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setLogin(Usuario login) {
-        this.login = login;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

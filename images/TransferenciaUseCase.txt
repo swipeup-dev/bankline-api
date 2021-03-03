@@ -1,0 +1,77 @@
+[
+  "usuario": {
+    "id": 1,
+    "login": "usuario_a",
+    "conta": {
+      "id": 1,
+      "saldo": 250.0,
+      "login": "usuario_a",
+      "lancamentos": [ 
+        {
+          "id": 1,
+          "data_lancamento": "2021-02-28",
+          "Salário Empresa X"
+          "valor": +1000,
+          "plano_conta": {
+            "id": 5,
+            "descricao": "SALARIO"
+            "tipo_transacao": "R"
+          }
+          "transferencia": null,
+        },
+        {
+          "id": 2,
+          "data_lancamento": "2021-03-01",
+          "Extra hipermercado"
+          "valor": -250,
+          "plano_conta": {
+            "id": 7,
+            "descricao": "MERCADO"
+            "tipo_transacao": "D"
+          },
+          "transferencia": null,
+        },        
+        {
+          "id": 3,
+          "data_lancamento": "2021-03-02",
+          "Aluguel imóvel"
+          "valor": -500,
+          "plano_conta": {
+            "id": 6,
+            "descricao": "ALUGUEL"
+            "tipo_transacao": "D"
+          },
+          "transferencia": 4,
+        },
+      ]
+    }
+  }
+]
+
+
+
+[
+  "usuario": {
+    "id": 2,
+    "login": "usuario_b",
+    "conta": {
+      "id": 2,
+      "saldo": 0.0,
+      "login": "usuario_b",
+      "lancamentos": [ 
+        {
+          "id": 4,
+          "data_lancamento": "2021-03-02",
+          "transferencia usuario_a"
+          "valor": +500,
+          "plano_conta": {
+            "id": 3,
+            "descricao": "TRANSFERENCIA RECEBIDA"
+            "tipo_transacao": "R"
+          }
+          "transferencia": 3,          
+        },
+      ]
+    }
+  }
+]

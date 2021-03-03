@@ -36,13 +36,14 @@ public class TesteConfiguration implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Usuario u1 = new Usuario();
         u1.setCpf("12345678912");
+        u1.setEmail("teste@teste.com");
         u1.setLogin("twsm");
         u1.setNome("Thomas");
         u1.setSenha("123456789");
         usuarioRepository.save(u1);
 
         Conta c1 = new Conta();
-        c1.setLogin(u1);
+        c1.setUsuario(u1);
         contaRepository.save(c1);
 
         PlanoConta pc1 = newPlano("RECEITA", u1, true, TipoTransacao.ENTRADA);
@@ -65,7 +66,7 @@ public class TesteConfiguration implements CommandLineRunner {
     private PlanoConta newPlano(String desc, Usuario user, boolean padrao, TipoTransacao tt) {
         PlanoConta pc = new PlanoConta();
         pc.setDescricao(desc);
-        pc.setLogin(user);
+        pc.setUsuario(user);
         pc.setPadrao(padrao);
         pc.setTipoTransacao(tt);
 
