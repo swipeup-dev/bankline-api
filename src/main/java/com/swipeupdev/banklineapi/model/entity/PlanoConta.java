@@ -24,6 +24,10 @@ import java.util.Objects;
 )
 public class PlanoConta implements Serializable {
     private static final long serialVersionUID = -8998598427364090544L;
+    public static final String PLANO_PADRAO_R = "RECEITA";
+    public static final String PLANO_PADRAO_D = "DESPESA";
+    public static final String PLANO_PADRAO_TC = "TRANSFERÊNCIA ENTRE CONTAS";
+    public static final String PLANO_PADRAO_TU = "TRANSFERÊNCIA ENTRE USUÁRIOS";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +46,7 @@ public class PlanoConta implements Serializable {
 
     @ManyToOne(targetEntity = Usuario.class)
     @JoinColumn(name = "login_usuario", referencedColumnName = "login", nullable = false)
-    private Usuario login;
+    private Usuario usuario;
 
     public PlanoConta() {
     }
@@ -79,12 +83,12 @@ public class PlanoConta implements Serializable {
         this.padrao = padrao;
     }
 
-    public Usuario getLogin() {
-        return login;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setLogin(Usuario login) {
-        this.login = login;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override
