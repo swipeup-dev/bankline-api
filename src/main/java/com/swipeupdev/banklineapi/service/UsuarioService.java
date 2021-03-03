@@ -21,6 +21,12 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private ContaService contaService;
+
+    @Autowired
+    private PlanoContaService planoContaService;
+
+    @Autowired
     private Validator validator;
 
     private BCryptPasswordEncoder crypt;
@@ -32,9 +38,9 @@ public class UsuarioService {
     @Transactional
     public void inserir(UsuarioDto dto) {
         this.validate(dto);
-        this.inserirNovoUsuario(dto);
-        //INSERIR CONTA (1)
-        //INSERIR PLANOS DE CONTA PADRÃO(4)
+        Usuario usuario = this.inserirNovoUsuario(dto);
+        contaService.novaContaParaUsuario(usuario);
+        planoContaService.novosPlanoContaPadrao(usuario);
     }
 
     private void validate(UsuarioDto dto) {
