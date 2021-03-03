@@ -36,6 +36,7 @@ public class TesteConfiguration implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Usuario u1 = new Usuario();
         u1.setCpf("12345678912");
+        u1.setEmail("teste@teste.com");
         u1.setLogin("twsm");
         u1.setNome("Thomas");
         u1.setSenha("123456789");
