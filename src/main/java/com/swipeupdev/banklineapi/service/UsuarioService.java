@@ -1,6 +1,5 @@
 package com.swipeupdev.banklineapi.service;
 
-
 import com.swipeupdev.banklineapi.model.dto.UsuarioDto;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
@@ -12,9 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,29 +22,36 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private BCryptPasswordEncoder crypt;
-
     private Validator validator;
 
+    private BCryptPasswordEncoder crypt;
+
     public UsuarioService() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        crypt = new BCryptPasswordEncoder(10, new SecureRandom());
     }
 
     @Transactional
-    public UsuarioDto inserir(UsuarioDto dto) {
+    public void inserir(UsuarioDto dto) {
+        this.validate(dto);
+        this.inserirNovoUsuario(dto);
+        //INSERIR CONTA (1)
+        //INSERIR PLANOS DE CONTA PADRÃO(4)
+    }
+
+    private void validate(UsuarioDto dto) {
         Set<ConstraintViolation<UsuarioDto>> violations = validator.validate(dto);
         for (ConstraintViolation<UsuarioDto> violation : violations) {
             throw new InvalidArgumentException(violation.getMessage());
         }
-        if(Objects.nonNull(usuarioRepository.localizarUsuarioPorLogin(dto.getLogin()))) {
-            throw new ExistingRecordException("Usuário já registrado");
+
+        if (Objects.nonNull(usuarioRepository.localizarUsuarioPorCpf(dto.getCpf()))) {
+            throw new ExistingRecordException("CPF já cadastrado.");
+        } else if (Objects.nonNull(usuarioRepository.localizarUsuarioPorLogin(dto.getLogin()))) {
+            throw new ExistingRecordException("Login já cadastrado.");
         }
-        this.inserirUsuario(dto);
-        return dto;
     }
 
-    private Usuario inserirUsuario(UsuarioDto dto) {
+    private Usuario inserirNovoUsuario(UsuarioDto dto) {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.getNome());
         usuario.setCpf(dto.getCpf());
@@ -54,4 +59,5 @@ public class UsuarioService {
         usuario.setSenha(crypt.encode(dto.getSenha()));
         return usuarioRepository.save(usuario);
     }
+
 }
