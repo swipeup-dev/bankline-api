@@ -28,12 +28,13 @@ public class PlanoConta implements Serializable {
     public static final String PLANO_PADRAO_D = "DESPESA";
     public static final String PLANO_PADRAO_TC = "TRANSFERÊNCIA ENTRE CONTAS";
     public static final String PLANO_PADRAO_TU = "TRANSFERÊNCIA ENTRE USUÁRIOS";
+    public static final int PLANO_CONTA_DESC_LENGTH = 100;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "descricao", length = 100, nullable = false)
+    @Column(name = "descricao", length = PLANO_CONTA_DESC_LENGTH, nullable = false)
     @NotBlank(message = "Descrição não pode ser em branco.")
     private String descricao;
 
