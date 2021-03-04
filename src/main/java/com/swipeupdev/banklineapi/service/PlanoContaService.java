@@ -6,14 +6,17 @@ import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.enums.TipoTransacao;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
 import com.swipeupdev.banklineapi.model.exception.InvalidArgumentException;
+import com.swipeupdev.banklineapi.model.exception.RecordNotFoundException;
 import com.swipeupdev.banklineapi.repository.PlanoContaRepository;
 import com.swipeupdev.banklineapi.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PlanoContaService {
@@ -26,6 +29,7 @@ public class PlanoContaService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Transactional
     protected void novosPlanoContaPadrao(Usuario usuario) {
         PlanoConta p1 = novoPlanoContaPadrao(PlanoConta.PLANO_PADRAO_R, usuario, TipoTransacao.ENTRADA);
         PlanoConta p2 = novoPlanoContaPadrao(PlanoConta.PLANO_PADRAO_D, usuario, TipoTransacao.SAIDA);
@@ -53,6 +57,7 @@ public class PlanoContaService {
         return pc;
     }
 
+    @Transactional
     public void inserir(PlanoContaDto dto) {
         validator.validate(dto);
         usuarioService.validarAutenticacao(dto.getLogin());
@@ -78,5 +83,15 @@ public class PlanoContaService {
         usuarioService.validarAutenticacao(login);
         Usuario usuario = usuarioService.getUsuarioExistente(login);
         return planoContaRepository.findAllByUsuario(usuario);
+    }
+
+    protected PlanoConta getPlanoContaUsuario(int id, Usuario usuario) {
+        Optional<PlanoConta> opt = planoContaRepository.findByIdAndUsuario(id, usuario);
+        if (opt.isEmpty()) {
+            throw new RecordNotFoundException(
+                    String.format("Plano de conta id:%d não encontrado para usuário %s",
+                            id, usuario.getLogin()));
+        }
+        return opt.get();
     }
 }
