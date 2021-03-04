@@ -66,6 +66,7 @@ public class UsuarioService {
         }
     }
 
+    @Transactional
     private Usuario inserirNovoUsuario(UsuarioDto dto) {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.getNome());
@@ -76,6 +77,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public NovaSenhaDto novaSenha(NovaSenhaDto dto) {
         validator.validate(dto);
 
@@ -90,6 +92,7 @@ public class UsuarioService {
         return dto;
     }
 
+    @Transactional
     public void alterarSenha(AtualizadorSenhaDto dto) {
         validator.validate(dto);
 
@@ -117,6 +120,7 @@ public class UsuarioService {
         return opt.get();
     }
 
+    @Transactional
     public SessaoDto logar(LoginDto dto) {
         validator.validate(dto);
         Usuario usuario = getUsuarioExistente(dto.getLogin());
