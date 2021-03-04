@@ -1,5 +1,7 @@
 package com.swipeupdev.banklineapi.model.enums;
 
+import com.swipeupdev.banklineapi.model.exception.InvalidArgumentException;
+
 public enum TipoTransacao {
     ENTRADA("ENTRADA", 1),
     SAIDA("SAIDA", -1);
@@ -21,12 +23,13 @@ public enum TipoTransacao {
     }
 
     public static TipoTransacao parse(String transacao) {
+
         for (TipoTransacao tt: TipoTransacao.values()) {
             if (tt.transacao.equalsIgnoreCase(transacao)) {
                 return tt;
             }
         }
 
-        throw new IllegalArgumentException("TipoTransação inválida.");
+        throw new InvalidArgumentException("Tipo de transação inválida. Opções disponíveis: ENTRADA, SAIDA");
     }
 }
