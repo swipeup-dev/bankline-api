@@ -1,22 +1,33 @@
 package com.swipeupdev.banklineapi.service;
 
 import com.swipeupdev.banklineapi.model.dto.AtualizadorSenhaDto;
+import com.swipeupdev.banklineapi.model.dto.LoginDto;
 import com.swipeupdev.banklineapi.model.dto.NovaSenhaDto;
+import com.swipeupdev.banklineapi.model.dto.SessaoDto;
 import com.swipeupdev.banklineapi.model.dto.UsuarioDto;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.exception.EntityRequirementException;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
+import com.swipeupdev.banklineapi.model.exception.InvalidAuthenticationException;
 import com.swipeupdev.banklineapi.model.exception.RecordNotFoundException;
 import com.swipeupdev.banklineapi.repository.UsuarioRepository;
+import com.swipeupdev.banklineapi.security.JWTConstants;
 import com.swipeupdev.banklineapi.util.Validator;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.security.SecureRandom;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -32,11 +43,8 @@ public class UsuarioService {
     @Autowired
     private Validator validator;
 
+    @Autowired
     private BCryptPasswordEncoder crypt;
-
-    public UsuarioService() {
-        crypt = new BCryptPasswordEncoder(10, new SecureRandom());
-    }
 
     @Transactional
     public void inserir(UsuarioDto dto) {
@@ -58,6 +66,7 @@ public class UsuarioService {
         }
     }
 
+    @Transactional
     private Usuario inserirNovoUsuario(UsuarioDto dto) {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.getNome());
@@ -68,6 +77,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public NovaSenhaDto novaSenha(NovaSenhaDto dto) {
         validator.validate(dto);
 
@@ -82,6 +92,7 @@ public class UsuarioService {
         return dto;
     }
 
+    @Transactional
     public void alterarSenha(AtualizadorSenhaDto dto) {
         validator.validate(dto);
 
@@ -100,12 +111,61 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    private Usuario getUsuarioExistente(String login) {
+    protected Usuario getUsuarioExistente(String login) {
         Optional<Usuario> opt = usuarioRepository.findByLogin(login);
         if (opt.isEmpty()) {
             throw new RecordNotFoundException("Login não cadastrado.");
         }
 
         return opt.get();
+    }
+
+    @Transactional
+    public SessaoDto logar(LoginDto dto) {
+        validator.validate(dto);
+        Usuario usuario = getUsuarioExistente(dto.getLogin());
+
+        if (!BCrypt.checkpw(dto.getSenha(), usuario.getSenha())) {
+            throw new EntityRequirementException("Senha de recuperação inválida.");
+        }
+
+        SessaoDto sessao = new SessaoDto();
+        sessao.setDataInicio(new Date(System.currentTimeMillis()));
+        sessao.setDataFim(new Date(System.currentTimeMillis() + JWTConstants.TOKEN_EXPIRATION));
+        sessao.setLogin(usuario.getLogin());
+        sessao.setToken(JWTConstants.PREFIX + getJWTToken(sessao));
+
+        return sessao;
+    }
+
+    private String getJWTToken(SessaoDto sessao) {
+        String role = "ROLE_USER";
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+            .commaSeparatedStringToAuthorityList(role);
+
+        String token = Jwts
+            .builder()
+            .setSubject(sessao.getLogin())
+            .claim(
+                "authorities",
+                grantedAuthorities
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList())
+            )
+            .setIssuedAt(sessao.getDataInicio())
+            .setExpiration(sessao.getDataFim())
+            .signWith(SignatureAlgorithm.HS512, JWTConstants.KEY.getBytes())
+            .compact();
+
+        return token;
+    }
+
+    protected void validarAutenticacao(String login) {
+        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean isString = obj instanceof String;
+        if (!(isString) || !(login.equals((String) obj))) {
+            throw new InvalidAuthenticationException("Usuário autenticado não corresponde ao login fornecido.");
+        }
     }
 }

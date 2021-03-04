@@ -1,5 +1,6 @@
 package com.swipeupdev.banklineapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.swipeupdev.banklineapi.model.enums.TipoTransacao;
 
 import javax.persistence.Column;
@@ -13,7 +14,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -28,12 +32,15 @@ public class PlanoConta implements Serializable {
     public static final String PLANO_PADRAO_D = "DESPESA";
     public static final String PLANO_PADRAO_TC = "TRANSFERÊNCIA ENTRE CONTAS";
     public static final String PLANO_PADRAO_TU = "TRANSFERÊNCIA ENTRE USUÁRIOS";
+    public static final int PLANO_CONTA_DESC_LENGTH = 100;
+    private static final Set<String> conjuntoTransferencias = new HashSet<>(
+        Arrays.asList(PLANO_PADRAO_TC, PLANO_PADRAO_TU));
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "descricao", length = 100, nullable = false)
+    @Column(name = "descricao", length = PLANO_CONTA_DESC_LENGTH, nullable = false)
     @NotBlank(message = "Descrição não pode ser em branco.")
     private String descricao;
 
@@ -49,6 +56,18 @@ public class PlanoConta implements Serializable {
     private Usuario usuario;
 
     public PlanoConta() {
+    }
+
+    public static boolean isTranferencia(PlanoConta plano) {
+        if (plano == null) {
+            return false;
+        }
+
+        return conjuntoTransferencias.contains(plano.getDescricao());
+    }
+
+    public boolean isTransferencia() {
+        return PlanoConta.isTranferencia(this);
     }
 
     public Integer getId() {
@@ -83,6 +102,7 @@ public class PlanoConta implements Serializable {
         this.padrao = padrao;
     }
 
+    @JsonIgnore
     public Usuario getUsuario() {
         return usuario;
     }

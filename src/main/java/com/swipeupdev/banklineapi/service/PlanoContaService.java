@@ -1,19 +1,35 @@
 package com.swipeupdev.banklineapi.service;
 
+import com.swipeupdev.banklineapi.model.dto.PlanoContaDto;
 import com.swipeupdev.banklineapi.model.entity.PlanoConta;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.enums.TipoTransacao;
+import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
+import com.swipeupdev.banklineapi.model.exception.InvalidArgumentException;
+import com.swipeupdev.banklineapi.model.exception.RecordNotFoundException;
 import com.swipeupdev.banklineapi.repository.PlanoContaRepository;
+import com.swipeupdev.banklineapi.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PlanoContaService {
     @Autowired
     private PlanoContaRepository planoContaRepository;
 
+    @Autowired
+    private Validator validator;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Transactional
     protected void novosPlanoContaPadrao(Usuario usuario) {
         PlanoConta p1 = novoPlanoContaPadrao(PlanoConta.PLANO_PADRAO_R, usuario, TipoTransacao.ENTRADA);
         PlanoConta p2 = novoPlanoContaPadrao(PlanoConta.PLANO_PADRAO_D, usuario, TipoTransacao.SAIDA);
@@ -39,5 +55,43 @@ public class PlanoContaService {
         pc.setTipoTransacao(tt);
 
         return pc;
+    }
+
+    @Transactional
+    public void inserir(PlanoContaDto dto) {
+        validator.validate(dto);
+        usuarioService.validarAutenticacao(dto.getLogin());
+        Usuario usuario = usuarioService.getUsuarioExistente(dto.getLogin());
+
+        if (planoContaRepository.existsByUsuarioAndDescricao(usuario, dto.getDescricao())) {
+            throw new ExistingRecordException("Plano de conta já cadastrado para este usuário.");
+        }
+
+        PlanoConta planoConta = new PlanoConta();
+        planoConta.setDescricao(dto.getDescricao());
+        planoConta.setPadrao(false);
+        planoConta.setTipoTransacao(dto.getTipoTransacao());
+        planoConta.setUsuario(usuario);
+        planoContaRepository.save(planoConta);
+    }
+
+    public List<PlanoConta> listarPlanosContaUsuario(String login) {
+        if (Objects.requireNonNullElse(login, "").isBlank()) {
+            throw new InvalidArgumentException("O 'login' não pode ser em branco.");
+        }
+
+        usuarioService.validarAutenticacao(login);
+        Usuario usuario = usuarioService.getUsuarioExistente(login);
+        return planoContaRepository.findAllByUsuario(usuario);
+    }
+
+    protected PlanoConta getPlanoContaUsuario(int id, Usuario usuario) {
+        Optional<PlanoConta> opt = planoContaRepository.findByIdAndUsuario(id, usuario);
+        if (opt.isEmpty()) {
+            throw new RecordNotFoundException(
+                    String.format("Plano de conta id:%d não encontrado para usuário %s",
+                            id, usuario.getLogin()));
+        }
+        return opt.get();
     }
 }

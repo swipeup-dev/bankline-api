@@ -1,6 +1,8 @@
 package com.swipeupdev.banklineapi.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,13 +16,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_lancamento")
 public class Lancamento implements Serializable {
     private static final long serialVersionUID = 5289248983087628100L;
-    private static final byte VALOR_PRECISION = 30;
+    private static final byte VALOR_PRECISION = 18;
     private static final byte VALOR_SCALE = 2;
 
     @Id
@@ -30,8 +33,12 @@ public class Lancamento implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
             timezone = "GMT")
+    @Column(name = "data_cadastro", nullable = false)
+    @CreationTimestamp
+    private Instant dataCadastro;
+
     @Column(name = "data_lancamento", nullable = false)
-    private Instant dataLancamento;
+    private LocalDate dataLancamento;
 
     @Column(name = "descricao", length = 100, nullable = false)
     @NotBlank(message = "Descrição não pode ser em branco.")
@@ -40,6 +47,7 @@ public class Lancamento implements Serializable {
     @Column(name = "valor", precision = VALOR_PRECISION, scale = VALOR_SCALE)
     private Double valor;
 
+    @JsonIgnore
     @ManyToOne(targetEntity = Conta.class)
     @JoinColumn(name = "conta_id", referencedColumnName = "id", nullable = false)
     private Conta conta;
@@ -63,11 +71,11 @@ public class Lancamento implements Serializable {
         this.id = id;
     }
 
-    public Instant getDataLancamento() {
+    public LocalDate getDataLancamento() {
         return dataLancamento;
     }
 
-    public void setDataLancamento(Instant dataLancamento) {
+    public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
 
