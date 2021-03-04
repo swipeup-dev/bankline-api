@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -32,14 +33,17 @@ public class TesteConfiguration implements CommandLineRunner {
     @Autowired
     private PlanoContaRepository planoContaRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder crypt;
+
     @Override
     public void run(String... args) throws Exception {
         Usuario u1 = new Usuario();
-        u1.setCpf("12345678912");
+        u1.setCpf("12345678901");
         u1.setEmail("teste@teste.com");
         u1.setLogin("twsm");
         u1.setNome("Thomas");
-        u1.setSenha("123456789");
+        u1.setSenha(crypt.encode("123456789"));
         usuarioRepository.save(u1);
 
         Conta c1 = new Conta();
