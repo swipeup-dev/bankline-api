@@ -1,5 +1,6 @@
 package com.swipeupdev.banklineapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.swipeupdev.banklineapi.model.enums.TipoTransacao;
 
 import javax.persistence.Column;
@@ -84,6 +85,7 @@ public class PlanoConta implements Serializable {
         this.padrao = padrao;
     }
 
+    @JsonIgnore
     public Usuario getUsuario() {
         return usuario;
     }

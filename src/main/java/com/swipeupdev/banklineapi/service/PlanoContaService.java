@@ -5,12 +5,15 @@ import com.swipeupdev.banklineapi.model.entity.PlanoConta;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.enums.TipoTransacao;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
+import com.swipeupdev.banklineapi.model.exception.InvalidArgumentException;
 import com.swipeupdev.banklineapi.repository.PlanoContaRepository;
 import com.swipeupdev.banklineapi.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PlanoContaService {
@@ -65,5 +68,15 @@ public class PlanoContaService {
         planoConta.setTipoTransacao(dto.getTipoTransacao());
         planoConta.setUsuario(usuario);
         planoContaRepository.save(planoConta);
+    }
+
+    public List<PlanoConta> listarPlanosContaUsuario(String login) {
+        if (Objects.requireNonNullElse(login, "").isBlank()) {
+            throw new InvalidArgumentException("O 'login' não pode ser em branco.");
+        }
+
+        usuarioService.validarAutenticacao(login);
+        Usuario usuario = usuarioService.getUsuarioExistente(login);
+        return planoContaRepository.findAllByUsuario(usuario);
     }
 }
