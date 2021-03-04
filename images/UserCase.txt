@@ -1,6 +1,0 @@
-1. Visitante não tem um cadastro no nosso sistema.
-2. Visitante efetua cadastro no sistema e se torna um usuário.
-2.1. Usuário ao ser cadastrado recebe uma única conta vinculada. (No video prof fala sobre duas contas...???)
-2.2. Usuário ao ser cadastrado recebe quatro Planos de Conta: Receita, Despesa, Transferencia entre contas, Transferência entre usuários.
-
-3. Visitante efetua login no sistema e após efetuar o login o acesso de usuário é liberado.
