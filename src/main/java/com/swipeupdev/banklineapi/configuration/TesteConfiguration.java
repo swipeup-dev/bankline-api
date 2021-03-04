@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Configuration
@@ -80,7 +80,7 @@ public class TesteConfiguration implements CommandLineRunner {
     private Lancamento newLancamento(Conta c, String desc, PlanoConta pc, double valor) {
         Lancamento l1 = new Lancamento();
         l1.setConta(c);
-        l1.setDataLancamento(Instant.now());
+        l1.setDataLancamento(LocalDate.now());
         l1.setDescricao(desc);
         l1.setPlanoConta(pc);
         l1.setValor(valor);
