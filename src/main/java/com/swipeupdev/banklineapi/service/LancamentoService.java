@@ -33,6 +33,8 @@ public class LancamentoService {
     @Transactional
     public void inserir(LancamentoDto dto) {
         validator.validate(dto);
+        usuarioService.validarAutenticacao(dto.getLogin());
+
         Usuario usuario = usuarioService.getUsuarioExistente(dto.getLogin());
         Conta conta = contaService.getContaUsuario(usuario);
         PlanoConta plano = planoContaService.getPlanoContaUsuario(dto.getPlanoConta(), usuario);

@@ -126,7 +126,7 @@ public class UsuarioService {
         Usuario usuario = getUsuarioExistente(dto.getLogin());
 
         if (!BCrypt.checkpw(dto.getSenha(), usuario.getSenha())) {
-            throw new EntityRequirementException("Senha de recuperação inválida.");
+            throw new EntityRequirementException("Senha inválida.");
         }
 
         SessaoDto sessao = new SessaoDto();
