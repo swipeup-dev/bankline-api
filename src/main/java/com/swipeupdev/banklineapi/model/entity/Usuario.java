@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -53,13 +52,11 @@ public class Usuario implements Serializable {
     private String login;
 
     @JsonIgnore
-    @Lob
     @Column(name = "senha", nullable = false)
     @NotNull
     private String senha;
 
     @JsonIgnore
-    @Lob
     @Column(name = "senha_recuperacao")
     private String senhaRecuperacao;
 
