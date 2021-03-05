@@ -7,6 +7,7 @@ import com.swipeupdev.banklineapi.model.enums.TipoTransacao;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
 import com.swipeupdev.banklineapi.model.exception.InvalidArgumentException;
 import com.swipeupdev.banklineapi.model.exception.RecordNotFoundException;
+import com.swipeupdev.banklineapi.model.security.UserSecurity;
 import com.swipeupdev.banklineapi.repository.PlanoContaRepository;
 import com.swipeupdev.banklineapi.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class PlanoContaService {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private UserSecurity userSecurity;
 
     @Transactional
     protected void novosPlanoContaPadrao(Usuario usuario) {
@@ -60,7 +64,7 @@ public class PlanoContaService {
     @Transactional
     public void inserir(PlanoContaDto dto) {
         validator.validate(dto);
-        usuarioService.validarAutenticacao(dto.getLogin());
+        userSecurity.validateAuthenticantion(dto.getLogin());
         Usuario usuario = usuarioService.getUsuarioExistente(dto.getLogin());
 
         if (planoContaRepository.existsByUsuarioAndDescricao(usuario, dto.getDescricao())) {
@@ -80,7 +84,7 @@ public class PlanoContaService {
             throw new InvalidArgumentException("O 'login' não pode ser em branco.");
         }
 
-        usuarioService.validarAutenticacao(login);
+        userSecurity.validateAuthenticantion(login);
         Usuario usuario = usuarioService.getUsuarioExistente(login);
         return planoContaRepository.findAllByUsuario(usuario);
     }

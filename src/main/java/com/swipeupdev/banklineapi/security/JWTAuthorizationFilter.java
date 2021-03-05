@@ -1,6 +1,7 @@
 package com.swipeupdev.banklineapi.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swipeupdev.banklineapi.model.security.UserSecurity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -11,11 +12,13 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -29,7 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private UserSecurity userSecurity;
 
     static final Logger LOGGER = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
@@ -71,8 +78,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private Claims validateToken(HttpServletRequest request) {
-        String jwtToken = request.getHeader(HEADER).replace(JWTConstants.PREFIX, "");
-        JwtParser parser = Jwts.parser().setSigningKey(JWTConstants.KEY.getBytes());
+        String jwtToken = request.getHeader(HEADER).replace(userSecurity.getPrefix(), "");
+        JwtParser parser = Jwts.parser().setSigningKey(userSecurity.getKey().getBytes());
         Jws<Claims> claimsJws;
         try {
             claimsJws = parser.parseClaimsJws(jwtToken);
@@ -83,15 +90,9 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         return claimsJws.getBody();
     }
 
-    /**
-     * Authentication method in Spring flow
-     *
-     * @param claims
-     */
     private void setUpSpringAuthentication(Claims claims) {
-        @SuppressWarnings("unchecked")
-        List<String> authorities = (List) claims.get("authorities");
-
+        List<String> authorities = (List<String>) claims.get("authorities");
+        authorities.forEach(System.err::println);
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
             claims.getSubject(),
             null,
@@ -104,7 +105,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
         String authenticationHeader = request.getHeader(HEADER);
-        if (authenticationHeader == null || !authenticationHeader.startsWith(JWTConstants.PREFIX))
+        if (authenticationHeader == null || !authenticationHeader.startsWith(userSecurity.getPrefix()))
             return false;
         return true;
     }
