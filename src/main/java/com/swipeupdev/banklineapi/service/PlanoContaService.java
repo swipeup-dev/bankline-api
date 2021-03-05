@@ -71,12 +71,8 @@ public class PlanoContaService {
             throw new ExistingRecordException("Plano de conta já cadastrado para este usuário.");
         }
 
-        PlanoConta planoConta = new PlanoConta();
-        planoConta.setDescricao(dto.getDescricao());
-        planoConta.setPadrao(false);
-        planoConta.setTipoTransacao(dto.getTipoTransacao());
-        planoConta.setUsuario(usuario);
-        planoContaRepository.save(planoConta);
+        planoContaRepository.save(novoPlanoContaUsuario(
+                dto.getDescricao(), usuario, dto.getTipoTransacao()));
     }
 
     public List<PlanoConta> listarPlanosContaUsuario(String login) {
