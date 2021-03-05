@@ -1,4 +1,4 @@
-# Projeto Bankline-APP  -  Grupo SwipeUp
+# [Projeto Bankline-API - SwipeUp Dev.](https://swipeup-bankline-api.herokuapp.com/)
  ## Sumário
   - <a href="#-Introduction" >Introdução</a> 
   - <a href="#-Tecnologias" >Tecnologias</a>
@@ -47,6 +47,67 @@ autenticação e autorização para usuários
 </div>
 ## Estrutura
 O Projeto foi idalizado utilizando arquitetura MVC.
+.<br>
+└── banklineapi/<br>
+    ├── BanklineApiApplication.java<br>
+    ├── configuration/<br>
+    │   └── TesteConfiguration.java<br>
+    ├── controller/<br>
+    │   ├── exceptions/<br>
+    │   │   ├── handler/<br>
+    │   │   │   ├── EntityRequirementExceptionHandler.java<br>
+    │   │   │   ├── ExistingRecordExceptionHandler.java<br>
+    │   │   │   ├── HandleException.java<br>
+    │   │   │   ├── HttpMessageNotReadableExceptionHandler.java<br>
+    │   │   │   ├── InvalidArgumentExceptionHandler.java<br>
+    │   │   │   ├── InvalidAuthenticationExceptionHandler.java<br>
+    │   │   │   ├── PersistenceExceptionHandler.java<br>
+    │   │   │   └── RecordNotFoundExceptionHandler.java<br>
+    │   │   └── StandardError.java<br>
+    │   ├── LancamentoController.java<br>
+    │   ├── PlanoContaController.java<br>
+    │   └── UsuarioController.java<br>
+    ├── doc/<br>
+    │   └── SwaggerConfig.java<br>
+    ├── model/<br>
+    │   ├── dto/<br>
+    │   │   ├── AtualizadorSenhaDto.java<br>
+    │   │   ├── LancamentoDto.java<br>
+    │   │   ├── LoginDto.java<br>
+    │   │   ├── NovaSenhaDto.java<br>
+    │   │   ├── PlanoContaDto.java<br>
+    │   │   ├── SessaoDto.java<br>
+    │   │   ├── TransferenciaDto.java<br>
+    │   │   └── UsuarioDto.java<br>
+    │   ├── entity/<br>
+    │   │   ├── Conta.java<br>
+    │   │   ├── Lancamento.java<br>
+    │   │   ├── PlanoConta.java<br>
+    │   │   └── Usuario.java<br>
+    │   ├── enums/<br>
+    │   │   └── TipoTransacao.java<br>
+    │   └── exception/<br>
+    │       ├── EntityRequirementException.java<br>
+    │       ├── ExistingRecordException.java<br>
+    │       ├── InvalidArgumentException.java<br>
+    │       ├── InvalidAuthenticationException.java<br>
+    │       └── RecordNotFoundException.java<br>
+    ├── repository/<br>
+    │   ├── ContaRepository.java<br>
+    │   ├── LancamentoRepository.java<br>
+    │   ├── PlanoContaRepository.java<br>
+    │   └── UsuarioRepository.java<br>
+    ├── security/<br>
+    │   ├── JWTAuthorizationFilter.java<br>
+    │   ├── JWTConstants.java<br>
+    │   └── WebSecurityConfig.java<br>
+    ├── service/<br>
+    │   ├── ContaService.java<br>
+    │   ├── LancamentoService.java<br>
+    │   ├── PlanoContaService.java<br>
+    │   └── UsuarioService.java<br>
+    └── util/<br>
+        └── Validator.java<br>
 
 **Model:** Os packages foram divididos internamente no model para uma melhor coesão. <br>
   - dto: Aqu definimos Data transfer object
@@ -63,65 +124,7 @@ O Projeto foi idalizado utilizando arquitetura MVC.
 
 A Estrutura completa está representado no seguinte esquema abaixo:
 
-└── banklineapi/ <br> 
-    ├── BanklineApiApplication.java <br>
-    ├── configuration/<br>
-    │   └── TesteConfiguration.java<br>
-    ├── controller/<br>
-    │   ├── exceptions/<br>
-    │   │   ├── handler/<br>
-    │   │   │   ├── EntityRequirementExceptionHandler.java<br>
-    │   │   │   ├── ExistingRecordExceptionHandler.java<br>
-    │   │   │   ├── HandleException.java<br>
-    │   │   │   ├── HttpMessageNotReadableExceptionHandler.java<br>
-    │   │   │   ├── InvalidArgumentExceptionHandler.java<br>
-    │   │   │   ├── InvalidAuthenticationExceptionHandler.java<br>
-    │   │   │   ├── PersistenceExceptionHandler.java<br>
-    │   │   │   └── RecordNotFoundExceptionHandler.java<br>
-    │   │   └── StandardError.java<br>
-    │   ├── LancamentoController<br>
-    │   ├── PlanoContaController.java<br>
-    │   └── UsuarioController.java<br>
-    ├── doc/<br>
-    │   └── SwaggerConfig.java<br>
-    ├── model/<br>
-    │   ├── dto/<br>
-    │   │   ├── AtualizadorSenhaDto.java<br>
-    │   │   ├── LancamentoDto.java<br>
-    │   │   ├── LoginDto.java<br>
-    │   │   ├── NovaSenhaDto.java<br>
-    │   │   ├── PlanoContaDto.java<br>
-    │   │   ├── SessaoDto.java<br>
-    │   │   └── UsuarioDto.java<br>
-    │   ├── entity/<br>
-    │   │   ├── Conta.java<br>
-    │   │   ├── Lancamento.java<br>
-    │   │   ├── PlanoConta.java<br>
-    │   │   └── Usuario.java<br>
-    │   ├── enums/<br>
-    │   │   └── TipoTransacao.java<br>
-    │   └── exception/<br>
-    │       ├── EntityRequirementException.java<br>
-    │       ├── ExistingRecordException.java<br>
-    │       ├── InvalidArgumentException.java<br>
-    │       ├── InvalidAuthenticationException.java<br>
-    │       └── RecordNotFoundException.java<br>
-    ├── repository/<br>
-    │   ├── ContaRepository.java<br>
-    │   ├── LancamentoRepository.java<br>
-    │   ├── PlanoContaRepository.java<br>
-    │   └── UsuarioRepository.java<br>
-    ├── security/<br>
-    │   ├── JWTAuthorizationFilter.java<br>
-    │   ├── JWTConstants.java<br>
-    │   └── WebSecurityConfig.java<br>
-    ├── service/<br>
-    │   ├── ContaService.java<br>
-    │   ├── LancamentoService.java<br>
-    │   ├── PlanoContaService.java<br>
-    │   └── UsuarioService.java<br>
-    └── util/<br>
-        └── Validator.java <br>
+## Endereço 
 ## Configuration
 - TesteConfiguration.java
 Arquivo de configuração do perfil de testes para validar a relação entre entidades/tabelas
@@ -140,11 +143,11 @@ Arquivo de configuração do perfil de testes para validar a relação entre ent
 - LancamentoController.java
 - PlanoContaController.java
 - UsuarioController.java 
-## doc
+## Doc
 - SwaggerConfig.java
 
 ## Model
-  ### dto
+  ### DTO
     - AtualizadorSenhaDto.java
     - LancamentoDto.java
     - LoginDto.java
@@ -152,20 +155,20 @@ Arquivo de configuração do perfil de testes para validar a relação entre ent
     - PlanoContaDto.java
     - SessaoDto.java
     - UsuarioDto.java
-  ### entity
+  ### Entity
   - Conta.java
   - Lancamento.java  
   - PlanoConta.java
   - Usuario.java      
-  ### enums
+  ### Enums
   - TipoTransacao.java
- ### exception
+ ### Exception
   - EntityRequirementException.java
   - ExistingRecordException.java
   - InvalidArgumentException.java
   - InvalidAuthenticationException.java
   - RecordNotFoundException.java
-## repository
+## Repository
 - ContaRepository.java
 - LancamentoRepository.java
 - PlanoContaRepository.java
@@ -179,8 +182,6 @@ Arquivo de configuração do perfil de testes para validar a relação entre ent
 - LancamentoService.java
 - PlanoContaService.java
 - UsuarioService.java
-## Test
-BanklineApiApplicationTests.java 
 ## Dependências
 - spring-boot-starter-data-jpa
 - spring-boot-starter-web
@@ -197,7 +198,7 @@ BanklineApiApplicationTests.java
 - springfox-swagger-ui
 
 # 💻 Time SwipeUp
-- Fabiana `(Development)` [LinkedIn](https://www.linkedin.com/in/fabiana-pereira-xavier/) [Github]()
-- Matheus `(Development)`  [LinkedIn](https://www.linkedin.com/in/matheus-marcena/)  [Github]()
+- Fabiana `(Development)` [LinkedIn](https://www.linkedin.com/in/fabiana-pereira-xavier/) [Github](https://github.com/fpxavier)
+- Matheus `(Development)`  [LinkedIn](https://www.linkedin.com/in/matheus-marcena/)  [Github](https://github.com/Theuf)
 - Misael `(Development)`  [LinkedIn](https://www.linkedin.com/in/misael-nascimento-57681659/)   [Github](https://github.com/MisaelSivuca)
 - Thomas `(Development)`  [LinkedIn](https://www.linkedin.com/in/twsm000/)  [Github](https://github.com/twsm000)
