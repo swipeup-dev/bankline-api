@@ -1,5 +1,6 @@
 package com.swipeupdev.banklineapi.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,6 +29,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/api/usuario/**"
     };
 
+    @Autowired
+    private JWTAuthorizationFilter authorizationFilter;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -39,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .cors()
             .and()
             .csrf().disable()
-            .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
             .antMatchers(SWAGGER_WHITELIST).permitAll()
             .antMatchers(API_WHITELIST).permitAll()

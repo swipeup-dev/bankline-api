@@ -1,6 +1,7 @@
 package com.swipeupdev.banklineapi.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -9,10 +10,6 @@ import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 public class LancamentoDto {
-//    @NotNull(message = "A 'conta' não foi informada.")
-//    @Positive(message = "Valores negativos não aceitos pelo campo 'conta'.")
-//    private int conta;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd",
             timezone = "GMT")
@@ -36,14 +33,6 @@ public class LancamentoDto {
 
     public LancamentoDto() {
     }
-
-//    public int getConta() {
-//        return conta;
-//    }
-//
-//    public void setConta(int conta) {
-//        this.conta = conta;
-//    }
 
     public LocalDate getData() {
         return data;
@@ -69,6 +58,7 @@ public class LancamentoDto {
         this.login = login;
     }
 
+    @JsonProperty(value = "plano_conta")
     public int getPlanoConta() {
         return planoConta;
     }
