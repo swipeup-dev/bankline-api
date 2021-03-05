@@ -9,10 +9,6 @@ import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 public class LancamentoDto {
-//    @NotNull(message = "A 'conta' não foi informada.")
-//    @Positive(message = "Valores negativos não aceitos pelo campo 'conta'.")
-//    private int conta;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd",
             timezone = "GMT")
@@ -36,14 +32,6 @@ public class LancamentoDto {
 
     public LancamentoDto() {
     }
-
-//    public int getConta() {
-//        return conta;
-//    }
-//
-//    public void setConta(int conta) {
-//        this.conta = conta;
-//    }
 
     public LocalDate getData() {
         return data;
