@@ -8,26 +8,18 @@ import com.swipeupdev.banklineapi.model.dto.UsuarioDto;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.exception.EntityRequirementException;
 import com.swipeupdev.banklineapi.model.exception.ExistingRecordException;
-import com.swipeupdev.banklineapi.model.exception.InvalidAuthenticationException;
 import com.swipeupdev.banklineapi.model.exception.RecordNotFoundException;
+import com.swipeupdev.banklineapi.model.security.UserSecurity;
 import com.swipeupdev.banklineapi.repository.UsuarioRepository;
-import com.swipeupdev.banklineapi.security.JWTConstants;
 import com.swipeupdev.banklineapi.util.Validator;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -45,6 +37,9 @@ public class UsuarioService {
 
     @Autowired
     private BCryptPasswordEncoder crypt;
+
+    @Autowired
+    private UserSecurity userSecurity;
 
     @Transactional
     public void inserir(UsuarioDto dto) {
@@ -131,41 +126,11 @@ public class UsuarioService {
 
         SessaoDto sessao = new SessaoDto();
         sessao.setDataInicio(new Date(System.currentTimeMillis()));
-        sessao.setDataFim(new Date(System.currentTimeMillis() + JWTConstants.TOKEN_EXPIRATION));
+        sessao.setDataFim(new Date(System.currentTimeMillis() + userSecurity.getExpiration()));
         sessao.setLogin(usuario.getLogin());
-        sessao.setToken(JWTConstants.PREFIX + getJWTToken(sessao));
+        sessao.setToken(userSecurity.generateToken(sessao));
 
         return sessao;
     }
 
-    private String getJWTToken(SessaoDto sessao) {
-        String role = "ROLE_USER";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-            .commaSeparatedStringToAuthorityList(role);
-
-        String token = Jwts
-            .builder()
-            .setSubject(sessao.getLogin())
-            .claim(
-                "authorities",
-                grantedAuthorities
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList())
-            )
-            .setIssuedAt(sessao.getDataInicio())
-            .setExpiration(sessao.getDataFim())
-            .signWith(SignatureAlgorithm.HS512, JWTConstants.KEY.getBytes())
-            .compact();
-
-        return token;
-    }
-
-    protected void validarAutenticacao(String login) {
-        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean isString = obj instanceof String;
-        if (!(isString) || !(login.equals((String) obj))) {
-            throw new InvalidAuthenticationException("Usuário autenticado não corresponde ao login fornecido.");
-        }
-    }
 }

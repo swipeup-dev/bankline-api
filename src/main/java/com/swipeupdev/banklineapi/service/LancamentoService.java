@@ -6,6 +6,7 @@ import com.swipeupdev.banklineapi.model.entity.Lancamento;
 import com.swipeupdev.banklineapi.model.entity.PlanoConta;
 import com.swipeupdev.banklineapi.model.entity.Usuario;
 import com.swipeupdev.banklineapi.model.exception.EntityRequirementException;
+import com.swipeupdev.banklineapi.model.security.UserSecurity;
 import com.swipeupdev.banklineapi.repository.LancamentoRepository;
 import com.swipeupdev.banklineapi.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,13 @@ public class LancamentoService {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private UserSecurity userSecurity;
+
     @Transactional
     public void inserir(LancamentoDto dto) {
         validator.validate(dto);
-        usuarioService.validarAutenticacao(dto.getLogin());
+        userSecurity.validateAuthenticantion(dto.getLogin());
 
         Usuario usuario = usuarioService.getUsuarioExistente(dto.getLogin());
         Conta conta = contaService.getContaUsuario(usuario);
