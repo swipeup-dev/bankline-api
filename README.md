@@ -12,11 +12,11 @@
   - <a href="#-Dependecias-used">Time</a>
 
 ##  Introdução
-Projeto em grupo, relativo a Academia [Accenture ](https://www.accenture.com/br-pt) 4.0 Banck end Java, ministrado pela [Gama Academy](https://www.gama.academy/).
+Projeto realizado em grupo, disponibilizado pela [Accademia Accenture](https://www.accenture.com/br-pt) 2.0 na produção de um back-end Java para uma API bankline, ministrado pela [Gama Academy](https://www.gama.academy/).
 
 ## Objetivo
-- Criar uma solução da BankLine para a realização de Crédito, Débito e Transferência
-- Prover um webservices com arquitetura REST para atender as demandas do site. 
+- Criar uma solução da bankLine para a realização de Crédito, Débito e Transferência.
+- Prover um webservices com arquitetura REST para atender as demandas do site.
 - Cadastro de usuário terá os campos login, senha, nome e cpf. 
 - O campo login pode conter caracteres que representam cpf, telefone ou apelido com até 20 caracteres.
 - Quando for realizado o cadastro, criar uma conta com saldo zero para o usuário.
@@ -34,13 +34,14 @@ Recomendamos na entidade Conta salvar o login do usuário para facilitar a busca
 - Gestão de Saldo das Contas.
 - Disponibilizar uma API Rest que deverá disponibilizar o serviço de
 autenticação e autorização para usuários
-- Disponibilizar a documentação dos recursos do Websservices REST.
+- Disponibilizar a documentação dos recursos do webservices REST.
 
 ## Tecnologias utilizadas
 - Java 11
-- Spring JPA
+- Spring Framework
+- H2
 - PostgreSQL
-
+- 
 # MER
 <div>
   <img src="https://raw.githubusercontent.com/swipeup-dev/bankline-api/2a78a2c9a5092d226d9fb630f30dbfd90c1ffdfe/images/MER_bankline.svg"/>
@@ -86,12 +87,14 @@ O Projeto foi idalizado utilizando arquitetura MVC.
     │   │   └── Usuario.java<br>
     │   ├── enums/<br>
     │   │   └── TipoTransacao.java<br>
-    │   └── exception/<br>
-    │       ├── EntityRequirementException.java<br>
-    │       ├── ExistingRecordException.java<br>
-    │       ├── InvalidArgumentException.java<br>
-    │       ├── InvalidAuthenticationException.java<br>
-    │       └── RecordNotFoundException.java<br>
+    │   ├── exception/<br>
+    │   │   ├── EntityRequirementException.java<br>
+    │   │   ├── ExistingRecordException.java<br>
+    │   │   ├── InvalidArgumentException.java<br>
+    │   │   ├── InvalidAuthenticationException.java<br>
+    │   │   └── RecordNotFoundException.java<br>
+    │   └── security/<br>
+    │       └── UserSecurity.java<br>
     ├── repository/<br>
     │   ├── ContaRepository.java<br>
     │   ├── LancamentoRepository.java<br>
@@ -99,7 +102,7 @@ O Projeto foi idalizado utilizando arquitetura MVC.
     │   └── UsuarioRepository.java<br>
     ├── security/<br>
     │   ├── JWTAuthorizationFilter.java<br>
-    │   ├── JWTConstants.java<br>
+    │   ├── JwtUserSecurity.java<br>
     │   └── WebSecurityConfig.java<br>
     ├── service/<br>
     │   ├── ContaService.java<br>
