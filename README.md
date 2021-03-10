@@ -46,7 +46,9 @@ autenticação e autorização para usuários
 <div>
   <img src="https://raw.githubusercontent.com/swipeup-dev/bankline-api/2a78a2c9a5092d226d9fb630f30dbfd90c1ffdfe/images/MER_bankline.svg"/>
 </div>
+
 ## Estrutura
+
 O Projeto foi idalizado utilizando arquitetura MVC.
 .<br>
 └── banklineapi/<br>
@@ -125,66 +127,6 @@ O Projeto foi idalizado utilizando arquitetura MVC.
 **Doc:** Configurações do Swagger para documentar a API<br>
 **Configuration:** Configurações de segurança do Spring Security e JWT.
 
-A Estrutura completa está representado no seguinte esquema abaixo:
-
-## Endereço 
-## Configuration
-- TesteConfiguration.java
-Arquivo de configuração do perfil de testes para validar a relação entre entidades/tabelas
-## Controller
-- controller/execeptions
-  - controller/execeptions/handler
-    - EntityRequirimentExceptionHandler.java
-    - ExistingRecordExceptionHandler.java
-    - HandleException.java
-    - HttpMessageNotReadableExceptionHandler.java
-    - InvalidArgumentExceptionHandler.java
-    - InvalidAuthenticationExceptionHandler.java
-    - PersistenceExceptionHandler.java
-    - RecordNotFoundExceptionHandlerjava
-  - StandarError.java 
-- LancamentoController.java
-- PlanoContaController.java
-- UsuarioController.java 
-## Doc
-- SwaggerConfig.java
-
-## Model
-  ### DTO
-    - AtualizadorSenhaDto.java
-    - LancamentoDto.java
-    - LoginDto.java
-    - NovaSenhaDto.java
-    - PlanoContaDto.java
-    - SessaoDto.java
-    - UsuarioDto.java
-  ### Entity
-  - Conta.java
-  - Lancamento.java  
-  - PlanoConta.java
-  - Usuario.java      
-  ### Enums
-  - TipoTransacao.java
- ### Exception
-  - EntityRequirementException.java
-  - ExistingRecordException.java
-  - InvalidArgumentException.java
-  - InvalidAuthenticationException.java
-  - RecordNotFoundException.java
-## Repository
-- ContaRepository.java
-- LancamentoRepository.java
-- PlanoContaRepository.java
-- UsuarioRepository.java         
-## Security
-- JWTAuthorizationFilter.java
-- JWTConstants.java
-- WebSecurityConfig.java
-## Service
-- ContaService.java
-- LancamentoService.java
-- PlanoContaService.java
-- UsuarioService.java
 ## Dependências
 - spring-boot-starter-data-jpa
 - spring-boot-starter-web
